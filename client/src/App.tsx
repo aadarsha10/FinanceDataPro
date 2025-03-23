@@ -9,6 +9,14 @@ import Dashboard from "./pages/Dashboard";
 import Templates from "./pages/Templates";
 import Documents from "./pages/Documents";
 import Documentation from "./pages/Documentation";
+import ApiReference from "./pages/ApiReference";
+import Guides from "./pages/Guides";
+import About from "./pages/About";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
+import Careers from "./pages/Careers";
+import Community from "./pages/Community";
+import Support from "./pages/Support";
 import Roadmap from "./pages/Roadmap";
 import NotFound from "./pages/not-found";
 

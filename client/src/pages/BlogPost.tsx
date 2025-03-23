@@ -210,6 +210,7 @@ const BlogPost = () => {
 
   return (
     <StaticPageLayout
+      title={blogPost.title}
       backLink={{ href: "/blog", label: "Back to Blog" }}
     >
       <div className="space-y-8">
