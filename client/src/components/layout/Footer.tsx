@@ -7,7 +7,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid md:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-white text-lg font-semibold mb-4">Dobaato</h3>
+            <h3 className="text-white text-lg font-semibold mb-4">FinDataPRO</h3>
             <p className="text-neutral-400 text-sm">
               Intelligent document processing platform for financial statements and bank records.
             </p>
@@ -50,12 +50,12 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/" className="text-neutral-400 hover:text-white text-sm transition-all">
+                <Link href="/integrations" className="text-neutral-400 hover:text-white text-sm transition-all">
                   Integrations
                 </Link>
               </li>
               <li>
-                <Link href="/" className="text-neutral-400 hover:text-white text-sm transition-all">
+                <Link href="/pricing" className="text-neutral-400 hover:text-white text-sm transition-all">
                   Pricing
                 </Link>
               </li>
@@ -76,22 +76,22 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/" className="text-neutral-400 hover:text-white text-sm transition-all">
+                <Link href="/api-reference" className="text-neutral-400 hover:text-white text-sm transition-all">
                   API Reference
                 </Link>
               </li>
               <li>
-                <Link href="/" className="text-neutral-400 hover:text-white text-sm transition-all">
+                <Link href="/guides" className="text-neutral-400 hover:text-white text-sm transition-all">
                   Guides
                 </Link>
               </li>
               <li>
-                <Link href="/" className="text-neutral-400 hover:text-white text-sm transition-all">
+                <Link href="/support" className="text-neutral-400 hover:text-white text-sm transition-all">
                   Support
                 </Link>
               </li>
               <li>
-                <Link href="/" className="text-neutral-400 hover:text-white text-sm transition-all">
+                <Link href="/community" className="text-neutral-400 hover:text-white text-sm transition-all">
                   Community
                 </Link>
               </li>
@@ -102,27 +102,27 @@ const Footer = () => {
             <h3 className="text-white text-base font-medium mb-4">Company</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/" className="text-neutral-400 hover:text-white text-sm transition-all">
+                <Link href="/about" className="text-neutral-400 hover:text-white text-sm transition-all">
                   About
                 </Link>
               </li>
               <li>
-                <Link href="/" className="text-neutral-400 hover:text-white text-sm transition-all">
+                <Link href="/blog" className="text-neutral-400 hover:text-white text-sm transition-all">
                   Blog
                 </Link>
               </li>
               <li>
-                <Link href="/" className="text-neutral-400 hover:text-white text-sm transition-all">
+                <Link href="/careers" className="text-neutral-400 hover:text-white text-sm transition-all">
                   Careers
                 </Link>
               </li>
               <li>
-                <Link href="/" className="text-neutral-400 hover:text-white text-sm transition-all">
+                <Link href="/press" className="text-neutral-400 hover:text-white text-sm transition-all">
                   Press
                 </Link>
               </li>
               <li>
-                <Link href="/" className="text-neutral-400 hover:text-white text-sm transition-all">
+                <Link href="/contact" className="text-neutral-400 hover:text-white text-sm transition-all">
                   Contact
                 </Link>
               </li>
@@ -132,7 +132,7 @@ const Footer = () => {
 
         <div className="mt-12 pt-8 border-t border-neutral-700 flex flex-col md:flex-row justify-between items-center">
           <div className="text-neutral-400 text-sm">
-            &copy; 2023{" "}
+            &copy; 2025{" "}
             <a
               href="https://dobaato.com"
               className="text-neutral-300 hover:text-white"
@@ -143,19 +143,19 @@ const Footer = () => {
           </div>
           <div className="mt-4 md:mt-0 flex space-x-6">
             <Link
-              href="/"
+              href="/privacy-policy"
               className="text-neutral-400 hover:text-white text-sm transition-all"
             >
               Privacy Policy
             </Link>
             <Link
-              href="/"
+              href="/terms-of-service"
               className="text-neutral-400 hover:text-white text-sm transition-all"
             >
               Terms of Service
             </Link>
             <Link
-              href="/"
+              href="/cookie-policy"
               className="text-neutral-400 hover:text-white text-sm transition-all"
             >
               Cookie Policy
