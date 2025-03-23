@@ -35,6 +35,14 @@ function Router() {
           <Route path="/templates" component={Templates} />
           <Route path="/documents" component={Documents} />
           <Route path="/documentation" component={Documentation} />
+          <Route path="/api-reference" component={ApiReference} />
+          <Route path="/guides" component={Guides} />
+          <Route path="/about" component={About} />
+          <Route path="/blog" component={Blog} />
+          <Route path="/blog/:id" component={BlogPost} />
+          <Route path="/careers" component={Careers} />
+          <Route path="/community" component={Community} />
+          <Route path="/support" component={Support} />
           <Route path="/roadmap" component={Roadmap} />
           <Route component={NotFound} />
         </Switch>
