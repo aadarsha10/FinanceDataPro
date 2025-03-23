@@ -9,11 +9,17 @@ import { dirname } from "path";
 import { insertTemplateSchema, insertFeatureRequestSchema } from "@shared/schema";
 import * as pdfjs from "pdfjs-dist";
 import { createObjectCsvWriter } from "csv-writer";
-import { utils, write } from "xlsx";
+import * as XLSX from "xlsx";
 
 // Configure pdfjs worker
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const UPLOAD_DIR = path.join(__dirname, "../uploads");
+
+// Set up PDF.js worker
+const PDFJS_WORKER_PATH = path.join(__dirname, '../node_modules/pdfjs-dist/build/pdf.worker.js');
+if (typeof window === 'undefined') {
+  pdfjs.GlobalWorkerOptions.workerSrc = PDFJS_WORKER_PATH;
+}
 
 // Create uploads directory if it doesn't exist
 async function ensureUploadDir() {
@@ -141,7 +147,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const { originalname, mimetype, size, filename } = req.file;
-      const templateId = req.body.templateId ? Number(req.body.templateId) : null;
+      const templateId = req.body.templateId && req.body.templateId !== "none" 
+        ? Number(req.body.templateId) 
+        : null;
+
+      console.log("Upload file details:", { originalname, mimetype, size, filename, templateId });
 
       // Create document record
       const document = await storage.createDocument({
@@ -149,6 +159,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         originalFilename: originalname,
         contentType: mimetype,
         size,
+        storedFilename: filename, // Store the system-generated filename
         userId: null,
         templateId
       });
@@ -172,21 +183,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Document not found" });
       }
 
-      // Find the file in the uploads directory
-      const files = await fs.readdir(UPLOAD_DIR);
-      const file = files.find(f => f.endsWith(document.originalFilename));
+      // Use the stored filename if available, otherwise search by original filename
+      let filePath: string;
       
-      if (!file) {
-        return res.status(404).json({ message: "File not found" });
+      if (document.storedFilename) {
+        filePath = path.join(UPLOAD_DIR, document.storedFilename);
+      } else {
+        // Fallback to searching by original filename (for backwards compatibility)
+        const files = await fs.readdir(UPLOAD_DIR);
+        const file = files.find(f => f.endsWith(document.originalFilename));
+        
+        if (!file) {
+          return res.status(404).json({ message: "File not found" });
+        }
+        
+        filePath = path.join(UPLOAD_DIR, file);
       }
-
-      const filePath = path.join(UPLOAD_DIR, file);
+      
+      try {
+        // Check if file exists
+        await fs.access(filePath);
+      } catch (err) {
+        console.error("File access error:", err);
+        return res.status(404).json({ message: "File not found or inaccessible" });
+      }
+      
       res.setHeader("Content-Type", document.contentType);
       res.setHeader("Content-Disposition", `inline; filename="${document.originalFilename}"`);
       
-      const fileStream = fs.readFile(filePath);
-      res.send(await fileStream);
+      const fileContent = await fs.readFile(filePath);
+      res.send(fileContent);
     } catch (error) {
+      console.error("Error serving document file:", error);
       res.status(500).json({ message: "Failed to fetch document file" });
     }
   });
@@ -294,10 +322,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Generate CSV from extracted data
       const tempCsvPath = path.join(UPLOAD_DIR, `export-${documentId}.csv`);
-      const data = extractedData.data;
+      const data = extractedData.data as Record<string, any>;
       
       let csvWriter;
-      let csvData = [];
+      let csvData: any[] = [];
       
       // Handle different data structures (accounts, transactions, etc.)
       if (data.transactions && Array.isArray(data.transactions)) {
@@ -313,7 +341,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         csvData = data.transactions;
       } else {
         // For general data (no array structure)
-        const headers = Object.keys(data).map(key => ({ id: key, title: key }));
+        const headers = Object.keys(data as object).map(key => ({ id: key, title: key }));
         csvWriter = createObjectCsvWriter({
           path: tempCsvPath,
           header: headers
@@ -353,9 +381,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Generate Excel from extracted data
       const tempXlsxPath = path.join(UPLOAD_DIR, `export-${documentId}.xlsx`);
-      const data = extractedData.data;
+      const data = extractedData.data as Record<string, any>;
       
-      let worksheetData = [];
+      let worksheetData: any[] = [];
       
       // Handle different data structures
       if (data.transactions && Array.isArray(data.transactions)) {
@@ -367,12 +395,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Create worksheet
-      const worksheet = utils.json_to_sheet(worksheetData);
-      const workbook = utils.book_new();
-      utils.book_append_sheet(workbook, worksheet, 'Data');
+      const worksheet = XLSX.utils.json_to_sheet(worksheetData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
       
       // Write to file
-      await write(workbook, tempXlsxPath);
+      XLSX.writeFile(workbook, tempXlsxPath);
 
       // Send the Excel file
       const excelContent = await fs.readFile(tempXlsxPath);

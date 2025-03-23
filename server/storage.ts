@@ -181,9 +181,16 @@ export class MemStorage implements IStorage {
   async createTemplate(template: InsertTemplate): Promise<Template> {
     const id = this.templateIdCounter++;
     const now = new Date();
+    
+    // Create a properly typed template object
     const newTemplate: Template = {
-      ...template,
       id,
+      name: template.name,
+      description: template.description || null,
+      documentType: template.documentType, 
+      bankName: template.bankName || null,
+      fields: template.fields,
+      userId: template.userId || null,
       createdAt: now,
       updatedAt: now,
       usageCount: 0
@@ -235,13 +242,23 @@ export class MemStorage implements IStorage {
 
   async createDocument(document: InsertDocument): Promise<Document> {
     const id = this.documentIdCounter++;
+    
+    // Create the document with proper type handling
     const newDocument: Document = {
-      ...document,
       id,
+      name: document.name,
+      originalFilename: document.originalFilename,
+      contentType: document.contentType,
+      size: document.size,
+      storedFilename: document.storedFilename || null,
       uploadedAt: new Date(),
-      processed: false
+      processed: false,
+      userId: document.userId || null,
+      templateId: document.templateId || null
     };
+    
     this.documents.set(id, newDocument);
+    console.log("Created document with storedFilename:", newDocument.storedFilename);
     return newDocument;
   }
 
@@ -249,11 +266,24 @@ export class MemStorage implements IStorage {
     const existingDocument = this.documents.get(id);
     if (!existingDocument) return undefined;
 
+    // Create a properly typed updated document
     const updatedDocument: Document = {
       ...existingDocument,
-      ...document
+      name: document.name !== undefined ? document.name : existingDocument.name,
+      originalFilename: document.originalFilename !== undefined ? document.originalFilename : existingDocument.originalFilename,
+      contentType: document.contentType !== undefined ? document.contentType : existingDocument.contentType,
+      size: document.size !== undefined ? document.size : existingDocument.size,
+      storedFilename: document.storedFilename !== undefined ? document.storedFilename : existingDocument.storedFilename,
+      userId: document.userId !== undefined ? document.userId || null : existingDocument.userId,
+      templateId: document.templateId !== undefined ? document.templateId || null : existingDocument.templateId,
+      // Keep these unchanged
+      id: existingDocument.id,
+      uploadedAt: existingDocument.uploadedAt,
+      processed: existingDocument.processed
     };
+    
     this.documents.set(id, updatedDocument);
+    console.log("Updated document, storedFilename:", updatedDocument.storedFilename);
     return updatedDocument;
   }
 
@@ -323,12 +353,19 @@ export class MemStorage implements IStorage {
 
   async createFeatureRequest(request: InsertFeatureRequest): Promise<FeatureRequest> {
     const id = this.featureRequestIdCounter++;
+    
+    // Create a properly typed feature request
     const newFeatureRequest: FeatureRequest = {
-      ...request,
       id,
+      title: request.title,
+      description: request.description,
+      category: request.category,
+      priority: request.priority,
+      userId: request.userId || null,
       status: "pending",
       submittedAt: new Date()
     };
+    
     this.featureRequests.set(id, newFeatureRequest);
     return newFeatureRequest;
   }

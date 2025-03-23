@@ -48,6 +48,7 @@ export const documents = pgTable("documents", {
   originalFilename: text("original_filename").notNull(),
   contentType: text("content_type").notNull(),
   size: integer("size").notNull(),
+  storedFilename: text("stored_filename"), // Generated filename in the file system
   uploadedAt: timestamp("uploaded_at").defaultNow().notNull(),
   userId: integer("user_id").references(() => users.id),
   processed: boolean("processed").default(false).notNull(),

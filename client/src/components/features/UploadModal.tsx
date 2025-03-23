@@ -233,7 +233,7 @@ const UploadModal = ({ isOpen, onClose }: UploadModalProps) => {
                 <SelectValue placeholder="Select a template" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">None</SelectItem>
+                <SelectItem value="none">None</SelectItem>
                 <SelectItem value="1">Chase Bank Statement</SelectItem>
                 <SelectItem value="2">Bank of America</SelectItem>
                 <SelectItem value="3">Wells Fargo</SelectItem>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="440" viewBox="0 0 800 440" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="800" height="440" rx="8" fill="#F9FAFB"/>
+  
+  <!-- Header -->
+  <rect y="0" width="800" height="60" rx="8" fill="#FFFFFF"/>
+  <rect x="24" y="20" width="120" height="20" rx="4" fill="#2563EB"/>
+  <rect x="650" y="20" width="120" height="20" rx="4" fill="#E5E7EB"/>
+  
+  <!-- Stats Section -->
+  <rect x="24" y="84" width="240" height="100" rx="8" fill="#FFFFFF"/>
+  <rect x="40" y="100" width="100" height="20" rx="4" fill="#E5E7EB"/>
+  <rect x="40" y="140" width="60" height="24" rx="4" fill="#2563EB"/>
+  
+  <rect x="280" y="84" width="240" height="100" rx="8" fill="#FFFFFF"/>
+  <rect x="296" y="100" width="100" height="20" rx="4" fill="#E5E7EB"/>
+  <rect x="296" y="140" width="60" height="24" rx="4" fill="#10B981"/>
+  
+  <rect x="536" y="84" width="240" height="100" rx="8" fill="#FFFFFF"/>
+  <rect x="552" y="100" width="100" height="20" rx="4" fill="#E5E7EB"/>
+  <rect x="552" y="140" width="60" height="24" rx="4" fill="#F59E0B"/>
+  
+  <!-- Charts Section -->
+  <rect x="24" y="208" width="500" height="208" rx="8" fill="#FFFFFF"/>
+  <rect x="40" y="224" width="140" height="20" rx="4" fill="#E5E7EB"/>
+  <rect x="40" y="256" width="420" height="140" rx="4" fill="#F3F4F6"/>
+  
+  <!-- Activity Section -->
+  <rect x="540" y="208" width="236" height="208" rx="8" fill="#FFFFFF"/>
+  <rect x="556" y="224" width="120" height="20" rx="4" fill="#E5E7EB"/>
+  <rect x="556" y="256" width="204" height="24" rx="4" fill="#F3F4F6"/>
+  <rect x="556" y="290" width="204" height="24" rx="4" fill="#F3F4F6"/>
+  <rect x="556" y="324" width="204" height="24" rx="4" fill="#F3F4F6"/>
+  <rect x="556" y="358" width="204" height="24" rx="4" fill="#F3F4F6"/>
+</svg>
