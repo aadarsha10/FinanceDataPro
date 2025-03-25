@@ -24,9 +24,7 @@ const Templates = () => {
   const [templateDescription, setTemplateDescription] = useState("");
   const [bankName, setBankName] = useState("");
 
-  const { data: templates, isLoading } = useQuery({
-    queryKey: ["/api/templates"],
-  });
+  const { data: templates, isLoading } = useQuery<Template[]>({    queryKey: ['/api/templates'],  });
 
   const handleCreateTemplate = () => {
     // In a real app, you would create the template through the API

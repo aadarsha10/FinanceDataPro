@@ -31,20 +31,11 @@ const DocumentProcessor = ({ documentId }: DocumentProcessorProps) => {
   const [editedData, setEditedData] = useState<any>(null);
   const [exportFormat, setExportFormat] = useState<string>("csv");
 
-  const { data: templates } = useQuery({
-    queryKey: ["/api/templates"],
-    enabled: !!documentId,
-  });
+  const { data: templates = [] } = useQuery<Template[]>({    queryKey: ['/api/templates'],    enabled: !!documentId,    initialData: []  });
 
-  const { data: document } = useQuery({
-    queryKey: [`/api/documents/${documentId}`],
-    enabled: !!documentId,
-  });
+  const { data: document } = useQuery<Document>({    queryKey: [`/api/documents/${documentId}`],    enabled: !!documentId  });
 
-  const { data: extractedData, isLoading: isLoadingData } = useQuery({
-    queryKey: [`/api/documents/${documentId}/data`],
-    enabled: !!documentId && (document as Document)?.processed === true,
-  });
+  const { data: extractedData, isLoading: isLoadingData } = useQuery<ExtractedData>({    queryKey: [`/api/documents/${documentId}/data`],    enabled: !!documentId && document?.processed === true  });
 
   useEffect(() => {
     if (extractedData) {
@@ -139,12 +130,12 @@ const DocumentProcessor = ({ documentId }: DocumentProcessorProps) => {
     if (!documentId) return;
     
     // Create and click an anchor to download the file
-    const link = document.createElement("a");
+    const link = window.document.createElement("a");
     link.href = `/api/documents/${documentId}/export/${format}`;
     link.download = `exported-data.${format}`;
-    document.body.appendChild(link);
+    window.document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
+    window.document.body.removeChild(link);
   };
 
   const renderTransactionTable = () => {
@@ -278,7 +269,7 @@ const DocumentProcessor = ({ documentId }: DocumentProcessorProps) => {
                       <SelectValue placeholder="Choose a template" />
                     </SelectTrigger>
                     <SelectContent>
-                      {templates?.map((template: Template) => (
+                      {templates.map((template: Template) => (
                         <SelectItem key={template.id} value={String(template.id)}>
                           {template.name}
                         </SelectItem>

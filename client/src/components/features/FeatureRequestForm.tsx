@@ -38,16 +38,7 @@ const FeatureRequestForm = () => {
   const { toast } = useToast();
   const [submitted, setSubmitted] = useState(false);
 
-  const form = useForm<FeatureRequestFormValues>({
-    resolver: zodResolver(featureRequestSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      category: "",
-      priority: "Medium",
-      userId: null,
-    },
-  });
+  const form = useForm<FeatureRequestFormValues>({    resolver: zodResolver(featureRequestSchema),    defaultValues: {      title: "",      description: "",      category: "",      priority: "Medium",      userId: undefined,    },  });
 
   const mutation = useMutation({
     mutationFn: (values: FeatureRequestFormValues) => {

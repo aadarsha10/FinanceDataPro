@@ -109,7 +109,7 @@ const TemplateCard = ({
           <div className="mb-3">
             <div className="text-xs font-medium text-neutral-500">Fields Mapped</div>
             <div className="mt-1 text-sm text-neutral-700">
-              {template.fields.length} fields
+              {(template.fields as Array<unknown>).length} fields
             </div>
           </div>
           <div className="mb-3">
