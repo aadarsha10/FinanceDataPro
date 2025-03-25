@@ -9,7 +9,7 @@ import { dirname } from "path";
 import { insertTemplateSchema, insertFeatureRequestSchema } from "@shared/schema";
 import * as pdfjs from "pdfjs-dist";
 import { createObjectCsvWriter } from "csv-writer";
-import * as XLSX from "xlsx";
+import ExcelJS from "exceljs";
 
 // Configure pdfjs worker
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -380,7 +380,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Generate Excel from extracted data
-      const tempXlsxPath = path.join(UPLOAD_DIR, `export-${documentId}.xlsx`);
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet('Data');
       const data = extractedData.data as Record<string, any>;
       
       let worksheetData: any[] = [];
@@ -394,22 +395,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
         worksheetData = [data];
       }
 
-      // Create worksheet
-      const worksheet = XLSX.utils.json_to_sheet(worksheetData);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
+      // Add headers
+      if (worksheetData.length > 0) {
+        worksheet.columns = Object.keys(worksheetData[0]).map(key => ({
+          header: key,
+          key: key,
+          width: 15
+        }));
+      }
+
+      // Add data rows
+      worksheet.addRows(worksheetData);
       
-      // Write to file
-      XLSX.writeFile(workbook, tempXlsxPath);
-
-      // Send the Excel file
-      const excelContent = await fs.readFile(tempXlsxPath);
-      res.setHeader('Content-Disposition', `attachment; filename="${document.name.replace(/\.[^/.]+$/, '')}.xlsx"`);
+      // Set response headers
       res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-      res.send(excelContent);
+      res.setHeader('Content-Disposition', `attachment; filename="${document.name.replace(/\.[^/.]+$/, '')}.xlsx"`);
+      
+      // Write to response stream
+      await workbook.xlsx.write(res);
 
-      // Clean up temp file
-      await fs.unlink(tempXlsxPath);
     } catch (error) {
       res.status(500).json({ message: "Failed to export data" });
     }
