@@ -46,16 +46,14 @@ const Documents = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(null);
 
-  const { data: documents, isLoading } = useQuery({
-    queryKey: ["/api/documents"],
-  });
+  const { data: documents = [], isLoading } = useQuery<DocType[]>({queryKey: ['/api/documents'], initialData: []});
 
-  const filteredDocuments = documents?.filter((doc: DocType) => 
+  const filteredDocuments = documents.filter((doc: DocType) => 
     doc.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const processedDocuments = filteredDocuments?.filter((doc: DocType) => doc.processed);
-  const pendingDocuments = filteredDocuments?.filter((doc: DocType) => !doc.processed);
+  const processedDocuments = filteredDocuments.filter((doc: DocType) => doc.processed);
+  const pendingDocuments = filteredDocuments.filter((doc: DocType) => !doc.processed);
 
   const handleDocumentClick = (documentId: number) => {
     setSelectedDocumentId(documentId);
@@ -216,7 +214,7 @@ const Documents = () => {
             <FileText className="h-4 w-4 text-neutral-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{documents?.length || 0}</div>
+            <div className="text-2xl font-bold">{documents.length}</div>
           </CardContent>
         </Card>
         <Card>
@@ -225,7 +223,7 @@ const Documents = () => {
             <Check className="h-4 w-4 text-success" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{processedDocuments?.length || 0}</div>
+            <div className="text-2xl font-bold">{processedDocuments.length}</div>
           </CardContent>
         </Card>
         <Card>
@@ -234,7 +232,7 @@ const Documents = () => {
             <Clock className="h-4 w-4 text-neutral-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{pendingDocuments?.length || 0}</div>
+            <div className="text-2xl font-bold">{pendingDocuments.length}</div>
           </CardContent>
         </Card>
       </div>
