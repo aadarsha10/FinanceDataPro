@@ -1,11 +1,17 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// API request logging middleware
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
@@ -37,8 +43,10 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Register API routes first
   const server = await registerRoutes(app);
 
+  // Error handling middleware
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
@@ -47,13 +55,26 @@ app.use((req, res, next) => {
     res.status(status).json({ message });
   });
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
+  // Handle static files and client routing differently based on environment
   if (app.get("env") === "development") {
+    // In development, use Vite's dev server
     await setupVite(app, server);
   } else {
+    // In production, serve static files
     serveStatic(app);
+    
+    // Serve static files from the client build directory
+    app.use(express.static(path.join(__dirname, '../client')));
+    
+    // This should be the LAST route - it's a catch-all for client-side routing
+    app.get('*', (req, res, next) => {
+      // Don't handle API routes with this catch-all
+      if (req.path.startsWith('/api')) {
+        return next();
+      }
+      
+      res.sendFile(path.join(__dirname, '../client/index.html'));
+    });
   }
 
   // Let Vercel handle the port and host binding in production
