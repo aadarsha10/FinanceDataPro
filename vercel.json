@@ -1,8 +1,6 @@
 {
   "version": 2,
-  "build": {
-    "command": "npm run build:client"
-  },
+  "buildCommand": "npm install && npm run build",
   "outputDirectory": "dist/client",
   "framework": "vite",
   "routes": [
