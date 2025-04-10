@@ -1,6 +1,8 @@
 {
   "version": 2,
-  "buildCommand": "npm run build:client",
+  "build": {
+    "command": "npm run build"
+  },
   "outputDirectory": "dist/client",
   "framework": "vite",
   "routes": [
